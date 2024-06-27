@@ -31,6 +31,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         this.repository = repository;
     }
 
+    // pattern of data format "dd.mm.yyyy hh:mm textOfNotification"
     private static final Pattern PATTERN = Pattern.compile("([0-9\\.\\:\\s]{16})(\\s)([\\W+]+)");
 
     @PostConstruct
@@ -42,21 +43,22 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     public int process(List<Update> updates) {
         updates.forEach(update -> {
             LOGGER.info("Processing update: {}", update);
-            // Process your updates here
+            // if there is any message
             if (update.message() != null) {
                 String messageText = update.message().text();
                 if (messageText != null) {
-                    if (messageText.equals("/start")) {
+                    if (messageText.equals("/start")) { // send message "Добро пожаловать"
                         SendMessage message = new SendMessage(update.message().chat().id(), "Добро пожаловать");
                         SendResponse response = telegramBot.execute(message);
                     } else {
                         var matcher = PATTERN.matcher(messageText);
-                        if (matcher.matches()) {
+                        if (matcher.matches()) { // if new message is like "dd.mm.yyyy hh:mm textOfNotification"
                             var noteTime = parseDate(matcher.group(1));
                             if (noteTime == null) {
                                 telegramBot.execute(new SendMessage(update.message().chat().id(), "Неправильный формат даты"));
                                 return;
                             }
+                            // then save notification task
                             var task = new NotificationTask();
                             task.setNoteText(matcher.group(3));
                             task.setChatId(update.message().chat().id());

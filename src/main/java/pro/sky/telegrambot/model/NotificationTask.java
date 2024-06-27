@@ -6,7 +6,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "notification_task")
-public class NotificationTask {
+public class NotificationTask { // object of typical notification task
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

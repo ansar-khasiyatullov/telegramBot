@@ -7,7 +7,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @EnableScheduling
 public class TelegramBotApplication {
-
+	// run the method "main" below to start
 	public static void main(String[] args) {
 		SpringApplication.run(TelegramBotApplication.class, args);
 	}
